@@ -1,0 +1,72 @@
+<div class="card">
+  <div class="card-header">
+    <!-- binding using Interpolation -->
+    {{ pageTitle }}
+  </div>
+
+  <!-- Filter by -->
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-2">Filtered by:</div>
+      <div class="col-md-4">
+        <!-- property binding -->
+        <input type="text" [(ngModel)]="listFilter" />
+      </div>
+    </div>
+  </div>
+
+  <!-- text  that displays user entered filter -->
+  <div class="row">
+    <div class="col-md-6">
+      <!-- interpolation -->
+      <h4>filtered by:{{ listFilter }}</h4>
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <!-- structural directives *ngIf && ngFor(Built-in ditrectives)-->
+    <table class="table" *ngIf="products && products.length">
+      <thead>
+        <tr>
+          <th>
+            <button class="btn-primary" (click)="toggleImage()">
+              {{ showImage ? "Hide" : "Show" }} Image
+            </button>
+          </th>
+          <th>Product</th>
+          <th>Code</th>
+          <th>Available</th>
+          <th>Price</th>
+          <th>5 Star Rating</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let product of filteredProducts">
+          <!-- property binding -->
+          <td>
+            <img
+              *ngIf="showImage"
+              [src]="product.imageUrl"
+              [title]="product.productName"
+              [style.width.px]="imageWidth"
+              [style.margin.px]="imagemargin"
+            />
+          </td>
+          <!-- Binding the value using Interpolation -->
+          <td>{{ product.productName }}</td>
+          <td>{{ product.productCode | lowercase | convertToSpaces }}</td>
+          <td>{{ product.releaseDate }}</td>
+          <td>{{ product.price | currency: "£":"symbol" }}</td>
+          <td>
+            <!-- Child Conponent -->
+            <pm-star
+              [rating]="product.starRating"
+              (ratingClicked)="onRatingClicked($event)"
+            ></pm-star>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
