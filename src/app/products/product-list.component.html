@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card text-white bg-secondary mb-5" style="width:60em">
   <div class="card-header">
     <!-- binding using Interpolation -->
     {{ pageTitle }}
@@ -22,6 +22,7 @@
       <h4>filtered by:{{ listFilter }}</h4>
     </div>
   </div>
+  ment HOME Product List product List Filtered by: ￼ filtered by:
 
   <div class="table-responsive">
     <!-- structural directives *ngIf && ngFor(Built-in ditrectives)-->
@@ -42,7 +43,10 @@
       </thead>
 
       <tbody>
-        <tr *ngFor="let product of filteredProducts">
+        <tr
+          *ngFor="let product of filteredProducts"
+          [routerLink]="['/products', product.productId]"
+        >
           <!-- property binding -->
           <td>
             <img
@@ -54,12 +58,15 @@
             />
           </td>
           <!-- Binding the value using Interpolation -->
-          <td>{{ product.productName }}</td>
+          <td>
+            <!-- routing the products to another page -->
+            <a>{{ product.productName }}</a>
+          </td>
           <td>{{ product.productCode | lowercase | convertToSpaces }}</td>
           <td>{{ product.releaseDate }}</td>
           <td>{{ product.price | currency: "£":"symbol" }}</td>
           <td>
-            <!-- Child Conponent -->
+            <!-- Child Component -->
             <pm-star
               [rating]="product.starRating"
               (ratingClicked)="onRatingClicked($event)"

@@ -1,9 +1,10 @@
 import { Component, OnInit } from "@angular/core";
 // import the interface
+
 import { IProduct } from "./products";
+import { ProductService } from "./product.service";
 
 @Component({
-  selector: "pm-products",
   templateUrl: "./product-list.component.html",
   styleUrls: ["./product-list.component.css"]
 })
@@ -12,6 +13,7 @@ export class ProductListComponent implements OnInit {
   imageWidth: number = 50;
   imagemargin: number = 2;
   showImage: boolean = true;
+  errorMessage: string;
 
   //setting and getting the value for searching
   _listFilter: string;
@@ -25,40 +27,23 @@ export class ProductListComponent implements OnInit {
   get listFilter(): string {
     return this._listFilter;
   }
+  //delete the hard coded product from the array to call from service
 
   filteredProducts: IProduct[];
+  products: IProduct[] = [];
 
-  products: IProduct[] = [
-    {
-      productId: 1,
-      productName: "Leaf Rake",
-      productCode: "GDN-0011",
-      releaseDate: "March 19, 2019",
-      description: "Leaf rake with 48-inch wooden handle.",
-      price: 19.95,
-      starRating: 3.2,
-      imageUrl: "assets/images/leaf_rake.png"
-    },
-    {
-      productId: 2,
-      productName: "Garden Cart",
-      productCode: "GDN-0023",
-      releaseDate: "March 18, 2019",
-      description: "15 gallon capacity rolling garden cart",
-      price: 32.99,
-      starRating: 4.2,
-      imageUrl: "assets/images/garden_cart.png"
-    }
-  ];
-  constructor() {
-    this.filteredProducts = this.products;
-    this.listFilter = "cart";
-  }
+  //3.injecting the service to the component
+
+  constructor(private productService: ProductService) {}
+
   //pass the value from the child component to the container
+
   onRatingClicked(message: string): void {
     this.pageTitle = "product List :" + message;
   }
+
   //filtering a word from a text box=>default properties in to the constructor
+
   performFilter(filterby: string): IProduct[] {
     filterby = filterby.toLocaleLowerCase();
     return this.products.filter((product: IProduct) => {
@@ -70,8 +55,17 @@ export class ProductListComponent implements OnInit {
   toggleImage(): void {
     this.showImage = !this.showImage;
   }
-
+  //calling the service
+  //subscribing an observable
   ngOnInit() {
-    console.log("from onInit");
+    this.productService.getProducts().subscribe({
+      next: products => {
+        this.products = products;
+        error: err => (this.errorMessage = err);
+        this.filteredProducts = this.products;
+      }
+    });
+
+    this.listFilter = "";
   }
 }
