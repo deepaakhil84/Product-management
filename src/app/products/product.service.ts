@@ -5,6 +5,7 @@ import { IProduct } from "./products";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Observable, throwError } from "rxjs";
 import { catchError, tap, map } from "rxjs/operators";
+import { JsonPipe } from '@angular/common';
 
 // 2.registering a service with a root injector
 
@@ -25,7 +26,12 @@ export class ProductService {
     return this.http.get<IProduct[]>(this.productUrl).pipe(
       tap(data => console.log("All" + JSON.stringify(data))),
       catchError(this.handleError)
-    );
+    )
+  }
+  getProduct(id: number): Observable<IProduct> {
+    return this.getProducts()
+      .pipe(map((products: IProduct[]) =>
+        products.find(product => product.productId === id)));
   }
 
 

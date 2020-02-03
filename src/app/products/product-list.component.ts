@@ -34,7 +34,7 @@ export class ProductListComponent implements OnInit {
 
   //3.injecting the service to the component
 
-  constructor(private productService: ProductService) {}
+  constructor(private productService: ProductService) { }
 
   //pass the value from the child component to the container
 
